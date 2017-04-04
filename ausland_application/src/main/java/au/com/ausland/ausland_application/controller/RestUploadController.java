@@ -45,7 +45,7 @@ public class RestUploadController {
 
         try {
 
-            saveUploadedFiles(Arrays.asList(uploadfile));
+            saveUploadedFiles(uploadfile);
 
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -58,53 +58,51 @@ public class RestUploadController {
 
 
     //save file
-    private void saveUploadedFiles(List<MultipartFile> files) throws IOException {
+    private void saveUploadedFiles(MultipartFile file) throws IOException 
+    {
+        if (file.isEmpty()) {
+            return; 
+        }
+        logger.debug("START print out the excel:");
+        try {
+            POIFSFileSystem fs = new POIFSFileSystem(file.getInputStream());
+            HSSFWorkbook wb = new HSSFWorkbook(fs);
+            HSSFSheet sheet = wb.getSheetAt(0);
+            HSSFRow row;
+            HSSFCell cell;
 
-        for (MultipartFile file : files) {
+            int rows; // No of rows
+            rows = sheet.getPhysicalNumberOfRows();
 
-            if (file.isEmpty()) {
-                continue; //next pls
-            }
-            logger.debug("START print out the excel:");
-            try {
-                POIFSFileSystem fs = new POIFSFileSystem(file.getInputStream());
-                HSSFWorkbook wb = new HSSFWorkbook(fs);
-                HSSFSheet sheet = wb.getSheetAt(0);
-                HSSFRow row;
-                HSSFCell cell;
+            int cols = 0; // No of columns
+            int tmp = 0;
 
-                int rows; // No of rows
-                rows = sheet.getPhysicalNumberOfRows();
-
-                int cols = 0; // No of columns
-                int tmp = 0;
-
-                // This trick ensures that we get the data properly even if it doesn't start from first few rows
-                for(int i = 0; i < rows; i++) {
-                    row = sheet.getRow(i);
-                    if(row != null) {
-                        tmp = sheet.getRow(i).getPhysicalNumberOfCells();
-                        if(tmp > cols) cols = tmp;
-                    }
+            // This trick ensures that we get the data properly even if it doesn't start from first few rows
+            for(int i = 0; i < rows; i++) {
+                row = sheet.getRow(i);
+                if(row != null) {
+                    tmp = sheet.getRow(i).getPhysicalNumberOfCells();
+                    if(tmp > cols) cols = tmp;
                 }
+            }
 
-                for(int r = 0; r < rows; r++) {
-                    row = sheet.getRow(r);
-                    if(row != null) {
-                        for(int c = 0; c < cols; c++) {
-                            cell = row.getCell((short)c);
-                            if(cell != null) {
-                                // Your code here
-                            	logger.debug("rows: "+r+"columns "+c+":"+cell+";");
-                            }
+            for(int r = 0; r < rows; r++) {
+                row = sheet.getRow(r);
+                if(row != null) {
+                    for(int c = 0; c < cols; c++) {
+                        cell = row.getCell((short)c);
+                        if(cell != null) {
+                            // Your code here
+                        	logger.debug("rows: "+r+"columns "+c+":"+cell+";");
                         }
                     }
                 }
-            } catch(Exception ioe) {
-                ioe.printStackTrace();
             }
-           
+        } catch(Exception ioe) {
+            ioe.printStackTrace();
         }
-
+           
     }
+
+    
 }
