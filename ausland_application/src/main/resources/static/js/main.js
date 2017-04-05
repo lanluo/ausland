@@ -1,26 +1,76 @@
 $(document).ready(function () {
 
-    $("#btnSubmit").click(function (event) {
+    $("#btnSubmitUpload").click(function (event) {
 
         //stop submit the form, we will post it manually.
         event.preventDefault();
 
-        fire_ajax_submit();
+        submit_upload();
+
+    });
+    
+    
+    $("#btnSubmitSearch").click(function (event) {
+
+        //stop submit the form, we will post it manually.
+        event.preventDefault();
+
+        submit_search();
 
     });
 
 });
 
-function fire_ajax_submit() {
+function submit_search() {
+
+    // Get form
+    var form = $('#fileSearchForm')[0];
+
+    var data = new FormData(form);
+
+    //data.append("CustomField", "This is some extra data, testing");
+
+    $("#btnSubmitSearch").prop("disabled", true);
+
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: "/api/search/",
+        data: data,
+        //http://api.jquery.com/jQuery.ajax/
+        //https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
+        processData: false, //prevent jQuery from automatically transforming the data into a query string
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+
+            $("#resultsearch").text(data);
+            console.log("SUCCESS : ", data);
+            $("#btnSubmitSearch").prop("disabled", false);
+
+        },
+        error: function (e) {
+
+            $("#resultsearch").text(e.responseText);
+            console.log("ERROR : ", e);
+            $("#btnSubmitSearch").prop("disabled", false);
+
+        }
+    });
+
+}
+
+function submit_upload() {
 
     // Get form
     var form = $('#fileUploadForm')[0];
 
     var data = new FormData(form);
 
-    data.append("CustomField", "This is some extra data, testing");
+    //data.append("CustomField", "This is some extra data, testing");
 
-    $("#btnSubmit").prop("disabled", true);
+    $("#btnSubmitUpload").prop("disabled", true);
 
     $.ajax({
         type: "POST",
@@ -35,16 +85,16 @@ function fire_ajax_submit() {
         timeout: 600000,
         success: function (data) {
 
-            $("#result").text(data);
+            $("#resultupload").text(data);
             console.log("SUCCESS : ", data);
-            $("#btnSubmit").prop("disabled", false);
+            $("#btnSubmitUpload").prop("disabled", false);
 
         },
         error: function (e) {
 
-            $("#result").text(e.responseText);
+            $("#resultupload").text(e.responseText);
             console.log("ERROR : ", e);
-            $("#btnSubmit").prop("disabled", false);
+            $("#btnSubmitUpload").prop("disabled", false);
 
         }
     });

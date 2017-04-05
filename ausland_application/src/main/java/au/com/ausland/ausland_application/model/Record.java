@@ -63,11 +63,12 @@ public class Record{
     @NotNull
     private String couriertemplate;
     
-    @Column(length=32)
+    @Column(length=32, unique = true)
     @NotNull
     private String courierid;
 
     @Temporal(TemporalType.DATE)
+    @Column
     private Date printdate;
 
     public Record() {

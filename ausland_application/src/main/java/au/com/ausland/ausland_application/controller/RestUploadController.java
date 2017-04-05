@@ -140,7 +140,7 @@ public class RestUploadController {
 	                     {
 	                    	 record.setPrintdate(row.getCell(15).getDateCellValue());
 	                     }
-	                     logger.debug("uploaded record: "+record.toString());
+	                      
 	                     recordRepository.save(record);
 	                     uploadedRows ++;
 	                     logger.debug("saved record: "+record.toString());

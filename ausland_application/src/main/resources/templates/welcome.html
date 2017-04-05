@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+<body>
+
+<h1>运单 上传  </h1>
+
+<form method="POST" enctype="multipart/form-data" id="fileUploadForm">
+    <input type="file" name="file"/><br/><br/>
+    <input type="submit" value="Submit" id="btnSubmitUpload"/>
+</form>
+
+<h1>运单上传结果</h1>
+<pre>
+    <span id="resultupload"></span>
+</pre>
+
+<h1>运单 搜索  </h1>
+<form method="POST" enctype="multipart/form-data" id="fileSearchForm">
+         
+            收件人姓名: <input type="text" name="receivername"/><br/><br/>
+          收件人电话: <input type="text" name="receiverphone"/><br/><br/>
+         运单号码：      <input type="text" name="courierid"/><br/><br/> 
+         
+    <input type="submit" value="Submit" id="btnSubmitSearch"/>
+</form>
+
+<h1>运单搜索结果</h1>
+<pre>
+    <span id="resultsearch"></span>
+</pre>
+<script type="text/javascript"
+        src="webjars/jquery/2.2.4/jquery.min.js"></script>
+
+<script type="text/javascript" src="js/main.js"></script>
+
+</body>
+</html>
